@@ -47,7 +47,7 @@ def generate_users(count_users: int) -> UsersDataResponse:
     return UsersDataResponse(users=temp_users)
 
 
-@app.post(path="/registry_user", summary="Регистрация пользователей.", tags=["Регистрация"])
+@app.post(path="/registry_user", summary="Регистрация пользователя.", tags=["Регистрация"])
 def post_registry_user(user_data_req: UserDataResponse) -> dict:
     """Регистрирует пользователя."""
     users_list.append(RegistryUserDataRequest(user_id=len(users_list) + 1, **user_data_req.model_dump()))
@@ -102,4 +102,5 @@ def delete_application(app_id_data: DeleteApplicationRequest) -> dict:
 
 
 if __name__ == "__main__":
+    print("Open current URL: http://127.0.0.1:8000/docs")
     uvicorn.run(app="src.api.api:app", reload=True)
