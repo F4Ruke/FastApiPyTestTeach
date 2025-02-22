@@ -1,4 +1,6 @@
 import uvicorn
+from time import sleep
+from random import randint
 from fastapi import FastAPI, HTTPException
 from sys import path as sys_path
 from os import path as os_path
@@ -69,6 +71,8 @@ def create_application(app_req: CreateApplicationRequest) -> CreateApplicationsR
         for user in users:
             if user.role != Role.DIRECTOR.value:
                 raise HTTPException(status_code=403, detail=f"Заявку может создать только пользователь с ролью директор.")
+
+            sleep(randint(10, 20))
 
             application_list.append(CreateApplicationResponse(id=len(application_list) + 1, user=user))
     else:
