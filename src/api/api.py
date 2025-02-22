@@ -19,12 +19,12 @@ app = FastAPI()
 
 
 @app.get(
-    path="/generate_users/{count_users}",
+    path="/generate_users",
     summary="Генерация пользователей.",
     tags=["Пользователь"],
     response_model=UsersDataResponse
 )
-def generate_users(count_users: int) -> UsersDataResponse:
+def generate_users(count_users: int = 1) -> UsersDataResponse:
     """Возвращает случайно сгенерируемых пользователей."""
     temp_users = []
 
