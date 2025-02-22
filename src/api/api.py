@@ -7,7 +7,8 @@ from os import path as os_path
 
 sys_path.append(os_path.abspath(os_path.curdir))
 
-from src.models.user_data import UsersDataResponse, UserDataResponse, RegistryUserDataRequest, RegistryUsersDataResponse, Role
+from src.models.user_data import UsersDataResponse, UserDataResponse, RegistryUserDataRequest, \
+    RegistryUsersDataResponse, Role, DeleteUserRequest
 from src.database.users import users_list
 from src.database.application import application_list
 from src.models.application_data import CreateApplicationResponse, CreateApplicationRequest, CreateApplicationsResponse, \
@@ -20,7 +21,7 @@ app = FastAPI()
 @app.get(
     path="/generate_users/{count_users}",
     summary="Генерация пользователей.",
-    tags=["Подготовка данных"],
+    tags=["Пользователь"],
     response_model=UsersDataResponse
 )
 def generate_users(count_users: int) -> UsersDataResponse:
@@ -47,7 +48,7 @@ def generate_users(count_users: int) -> UsersDataResponse:
     return UsersDataResponse(users=temp_users)
 
 
-@app.post(path="/registry_user", summary="Регистрация пользователя.", tags=["Регистрация"])
+@app.post(path="/registry_user", summary="Регистрация пользователя.", tags=["Пользователь"])
 def post_registry_user(user_data_req: UserDataResponse) -> dict:
     """Регистрирует пользователя."""
     users_list.append(RegistryUserDataRequest(user_id=len(users_list) + 1, **user_data_req.model_dump()))
@@ -55,10 +56,21 @@ def post_registry_user(user_data_req: UserDataResponse) -> dict:
     return {}
 
 
-@app.get(path="/registry_users", summary="Получение всех зарегистрированных пользователей.", tags=["Получение данных"])
+@app.get(path="/registry_users", summary="Получение всех зарегистрированных пользователей.", tags=["Пользователь"])
 def get_registry_users() -> RegistryUsersDataResponse:
     """Возвращаем зарегистрированных пользователей."""
     return RegistryUsersDataResponse(users=users_list)
+
+
+@app.delete(path="/user", summary="Удаление пользователя.", tags=["Пользователь"])
+def delete_user(user_id_data: DeleteUserRequest) -> dict:
+    """Удаляем заявку."""
+    for i, user in enumerate(users_list):
+        if user_id_data.user_id == user.user_id:
+            del users_list[i]
+            return {}
+
+    raise HTTPException(status_code=404, detail="Заявка не найдена.")
 
 
 @app.post(path="/create_application", summary="Создание заявки.", tags=["Заявка"], response_model=CreateApplicationsResponse)

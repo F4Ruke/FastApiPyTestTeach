@@ -25,3 +25,7 @@ class RegistryUserDataRequest(UserDataResponse):
 
 class RegistryUsersDataResponse(BaseModel):
     users: list[RegistryUserDataRequest]
+
+
+class DeleteUserRequest(BaseModel):
+    user_id: int = Field(gt=0)
