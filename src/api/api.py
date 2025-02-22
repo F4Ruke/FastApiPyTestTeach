@@ -62,9 +62,9 @@ def get_registry_users() -> RegistryUsersDataResponse:
     return RegistryUsersDataResponse(users=users_list)
 
 
-@app.delete(path="/user", summary="Удаление пользователя.", tags=["Пользователь"])
+@app.delete(path="/registry_user", summary="Удаление пользователя.", tags=["Пользователь"])
 def delete_user(user_id_data: DeleteUserRequest) -> dict:
-    """Удаляем заявку."""
+    """Удаляем пользователя из списка зарегистрированных пользователей."""
     for i, user in enumerate(users_list):
         if user_id_data.user_id == user.user_id:
             del users_list[i]
