@@ -73,7 +73,9 @@ def delete_user(user_id_data: DeleteUserRequest) -> dict:
     raise HTTPException(status_code=404, detail="Заявка не найдена.")
 
 
-@app.post(path="/create_application", summary="Создание заявки.", tags=["Заявка"], response_model=CreateApplicationsResponse)
+@app.post(
+    path="/create_application", summary="Создание заявки.", tags=["Заявка"], response_model=CreateApplicationsResponse
+)
 def create_application(app_req: CreateApplicationRequest) -> CreateApplicationsResponse:
     """Создаем заявку."""
 
