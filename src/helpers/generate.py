@@ -6,7 +6,7 @@ from string import ascii_letters, digits
 
 @dataclass
 class UserData:
-    """Класс описывающий мужского пользователя."""
+    """Класс описывающий пользователя."""
 
     def __init__(self) -> None:
         self.id = randint(1, 99)
