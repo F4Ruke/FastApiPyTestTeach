@@ -11,7 +11,6 @@ class UserData:
     """Класс описывающий пользователя."""
 
     def __init__(self) -> None:
-        self.id = randint(1, 99)
         self.sex = Sex.get_random_item()
         self.first_name = self.get_random_first_name()
         self.last_name = self.get_random_last_name()

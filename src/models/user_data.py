@@ -4,7 +4,6 @@ from src.constants.user_data import Sex, Role
 
 
 class UserDataResponse(BaseModel):
-    id: int = Field(gt=0)
     sex: str | Sex
     first_name: str = Field(min_length=3, max_length=30)
     last_name: str = Field(min_length=3, max_length=30)
@@ -20,12 +19,8 @@ class UsersDataResponse(BaseModel):
     users: list[UserDataResponse]
 
 
-class PasswordDataRequest(BaseModel):
-    password: str = Field(min_length=6, max_length=30)
-
-
-class RegistryUserDataRequest(PasswordDataRequest, UserDataResponse):
-    pass
+class RegistryUserDataRequest(UserDataResponse):
+    user_id: int = Field(gt=0)
 
 
 class RegistryUsersDataResponse(BaseModel):
