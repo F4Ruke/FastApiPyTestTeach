@@ -7,9 +7,13 @@ class CreateApplicationRequest(BaseModel):
 
 
 class CreateApplicationResponse(BaseModel):
-    id: int = Field(gt=0)
+    application_id: int = Field(gt=0)
     user: RegistryUserDataRequest
 
 
 class CreateApplicationsResponse(BaseModel):
     applications: list[CreateApplicationResponse]
+
+
+class DeleteApplicationRequest(BaseModel):
+    application_id: int = Field(gt=0)

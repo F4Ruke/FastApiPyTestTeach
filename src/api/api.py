@@ -10,7 +10,8 @@ sys_path.append(os_path.abspath(os_path.curdir))
 from src.models.user_data import UsersDataResponse, UserDataResponse, RegistryUserDataRequest, RegistryUsersDataResponse, Role
 from src.database.users import users_list
 from src.database.application import application_list
-from src.models.application_data import CreateApplicationResponse, CreateApplicationRequest, CreateApplicationsResponse
+from src.models.application_data import CreateApplicationResponse, CreateApplicationRequest, CreateApplicationsResponse, \
+    DeleteApplicationRequest
 from src.helpers.generate import UserData
 
 app = FastAPI()
@@ -63,16 +64,17 @@ def get_registry_users() -> RegistryUsersDataResponse:
 @app.post(path="/create_application", summary="Создание заявки.", tags=["Заявка"], response_model=CreateApplicationsResponse)
 def create_application(app_req: CreateApplicationRequest) -> CreateApplicationsResponse:
     """Создаем заявку."""
-    if users := [user for user in users_list if app_req.user_id == user.user_id]:
-        for user in users:
-            if user.role != Role.DIRECTOR.value:
-                raise HTTPException(status_code=403, detail=f"Заявку может создать только пользователь с ролью директор.")
 
+    if user_data := [user for user in users_list if app_req.user_id == user.user_id]:
+        if user_data[0].role == Role.DIRECTOR.value or user_data[0].role == Role.USER.value:
             sleep(randint(10, 20))
-
-            application_list.append(CreateApplicationResponse(id=len(application_list) + 1, user=user))
+            application_list.append(
+                CreateApplicationResponse(application_id=len(application_list) + 1, user=user_data[0])
+            )
+        else:
+            raise HTTPException(status_code=403, detail="Заявку может создать только пользователь с ролью директор.")
     else:
-        raise HTTPException(status_code=403, detail=f"Пользователь не зарегистирован.")
+        raise HTTPException(status_code=403, detail="Пользователь не зарегистирован.")
 
     return CreateApplicationsResponse(applications=application_list)
 
@@ -86,6 +88,17 @@ def create_application(app_req: CreateApplicationRequest) -> CreateApplicationsR
 def create_application() -> CreateApplicationsResponse:
     """Создаем заявку."""
     return CreateApplicationsResponse(applications=application_list)
+
+
+@app.delete(path="/application", summary="Удаление заявки.", tags=["Заявка"])
+def delete_application(app_id_data: DeleteApplicationRequest) -> dict:
+    """Удаляем заявку."""
+    for i, application in enumerate(application_list):
+        if app_id_data.application_id == application.application_id:
+            del application_list[i]
+            return {}
+
+    raise HTTPException(status_code=404, detail="Заявка не найдена.")
 
 
 if __name__ == "__main__":
