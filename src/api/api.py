@@ -70,7 +70,7 @@ def delete_user(user_id_data: DeleteUserRequest) -> dict:
             del users_list[i]
             return {}
 
-    raise HTTPException(status_code=404, detail="Заявка не найдена.")
+    raise HTTPException(status_code=404, detail="Пользователь не найдена.")
 
 
 @app.post(
