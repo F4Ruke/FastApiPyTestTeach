@@ -7,5 +7,5 @@ class BaseEnum(Enum):
 
     @classmethod
     def get_random_item(cls) -> "BaseEnum":
-        """Получаем случайный пол."""
+        """Получаем случайный элелемент."""
         return choice([item for item in cls])
